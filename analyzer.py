@@ -1,11 +1,19 @@
 import json
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file if present
+load_dotenv()
 
 # Mocking the AI call for the prototype. 
 # In a real scenario, this would import google.generativeai or use a local ONNX runtime.
 
 class IntentAnalyzer:
     def __init__(self):
+        self.api_key = os.getenv("GEMINI_API_KEY")
+        if not self.api_key:
+            print("⚠️  Warning: GEMINI_API_KEY not found in .env. Using MOCK mode.")
+
         self.system_prompt = """
         You are the backend AI for 'SnapAction'. Your job is to analyze screenshots and determine the user's INTENT.
         
