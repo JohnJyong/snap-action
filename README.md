@@ -2,55 +2,71 @@
 
 > **Turn Screenshots into Actions, Instantly.**
 > 
-> *A Proof-of-Concept for an On-Device AI Intent Capsule System.*
+> *A Cross-Platform Concept for On-Device AI Intent Capsules.*
 
-## 🚀 Vision
-SnapAction is a background service that listens for screenshot events, analyzes the image content locally using multimodal AI, and offers immediate, context-aware actions via a non-intrusive "Intent Capsule" UI.
+## 🚀 Overview
 
-## 🧠 Core Logic (The "Brain")
-This repository contains the **Python Prototype** of the intent analysis engine. 
+SnapAction is an AI-powered background service that detects user intent from screenshots and offers immediate actions via a "Capsule" UI.
 
-### Supported Intents
-1.  **🛍️ Shopping (Product)**
-    *   **Trigger:** Screenshot contains a physical product (clothes, gadgets, furniture).
-    *   **Action:** Extract search terms -> Open Price Comparison / Shopping Search.
-2.  **📍 Navigation (Place)**
-    *   **Trigger:** Screenshot contains a storefront, street view, or address text.
-    *   **Action:** Extract place name/address -> Save to Maps / Navigate.
-3.  **📅 Scheduling (Event)**
-    *   **Trigger:** Screenshot contains a poster, date/time, or invitation.
-    *   **Action:** Extract title & time -> Add to Calendar.
-
-## 🛠️ Architecture (Production vs Prototype)
-
-| Component | Production (Mobile App) | This Prototype (Python) |
+| Platform | Status | Tech Stack |
 | :--- | :--- | :--- |
-| **Listener** | `BroadcastReceiver` (Android) / Shortcuts (iOS) | `File Watcher` (Simulated) |
-| **Model** | Gemini Nano / Phi-3-mini (On-Device NPU) | Gemini Pro API (Cloud Simulation) |
-| **UI** | System Overlay / Dynamic Island | Console Output / Log |
+| **Python (Core)** | ✅ Prototype | Python, `analyzer.py`, `actions_dispatcher.py` |
+| **Android** | 🚧 Concept | Kotlin, `ContentObserver`, Gemini Nano |
+| **iOS** | 🚧 Concept | Swift, SwiftUI, Shortcuts Integration |
+| **Web** | ✅ Demo | HTML5, JavaScript (Mock) |
 
-## 📦 Project Structure
+## 📂 Project Structure
+
 ```bash
 snap-action/
-├── main.py              # Event loop simulating screenshot capture
-├── analyzer.py          # The Vision LLM Prompt & Logic
-├── actions/
-│   ├── shopping.py      # Price comparison logic
-│   ├── maps.py          # Geocoding logic
-│   └── calendar.py      # .ics generation logic
-└── requirements.txt     # Dependencies
+├── main.py              # 🐍 Python Watcher Service (MVP)
+├── android/             # 🤖 Android App Source (Kotlin)
+├── ios/                 # 🍎 iOS App Source (Swift)
+├── web/                 # 🌐 Web Demo (HTML/JS)
+└── actions_dispatcher.py # 🧠 Core Logic
 ```
 
-## ⚡️ Quick Start
-1.  Install dependencies:
-    ```bash
-    pip install -r requirements.txt
-    ```
-2.  Run the watcher:
-    ```bash
-    python main.py
-    ```
-3.  Drop an image into the `screenshots/` folder to test!
+## 🛠️ Usage Guide
 
-## 🔒 Privacy First
-In the production version, **NO images leave the device**. The "Brain" runs locally. This prototype uses Cloud APIs purely for demonstration purposes.
+### 1. Python Core (CLI)
+Run the watcher on your desktop to process images in a folder.
+```bash
+# Install deps
+pip install -r requirements.txt
+
+# Run
+python main.py
+
+# Test
+# Drop 'shoe.png' into the 'screenshots/' folder.
+```
+
+### 2. Web Demo (Browser)
+A simple drag-and-drop interface to visualize the UI.
+1. Go to `snap-action/web/`
+2. Open `index.html` in Chrome/Safari.
+3. Drag an image (rename it to `shoe.jpg` or `map.png` to trigger intents) into the box.
+
+### 3. Android (Developer)
+The Android code uses a `ContentObserver` to listen for new media.
+*   **Path:** `android/app/src/main/java/com/snapaction/ScreenshotService.kt`
+*   **Key Logic:** When `MediaStore` updates, we get the URI and pass it to the local inference engine.
+
+### 4. iOS (Developer)
+Due to sandboxing, iOS requires user initiation or Shortcuts.
+*   **Path:** `ios/SnapAction/ContentView.swift`
+*   **Logic:** A button to "Import Last Screenshot" and analyze it.
+
+## 🐳 Docker (Run Anywhere)
+Don't want to install Python? Use Docker.
+```bash
+docker build -t snap-action .
+docker run -v $(pwd)/screenshots:/app/screenshots -it snap-action
+```
+
+## 🤝 Contributing
+1. Fork the repo
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
